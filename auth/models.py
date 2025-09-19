@@ -2,6 +2,9 @@ from database import get_db, BaseModel
 from sqlalchemy import Integer, String, Boolean
 from sqlalchemy.orm import relationship, Mapped, mapped_column
 
+from api.models.cart import Cart
+from api.models.order import Order
+
 class User(BaseModel):
     __tablename__ = "users"
 
@@ -12,5 +15,5 @@ class User(BaseModel):
     email: Mapped[str] = mapped_column(String(100), unique=True, nullable=False)
     hashed_password: Mapped[str] = mapped_column(String(100), nullable=False)
 
-
-
+    carts: Mapped[list["Cart"]] = relationship("Cart", back_populates="user")
+    orders: Mapped[list["Order"]] = relationship("Order", back_populates="user")

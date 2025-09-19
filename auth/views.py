@@ -16,7 +16,7 @@ async def user_register(user_data: UserRegisterSchema, db: Session = Depends(get
     if is_user_exists:
         return HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail= "User alredy exists")
     password_hash = hesh_password(user_data.password)
-    user = User(fullname = user_data.fullname, username = user_data.username, hashed_password = password_hash)
+    user = User(fullname = user_data.fullname, username = user_data.username,email = user_data.email, hashed_password = password_hash)
     db.add(user)
     db.commit()
     db.refresh(user)
@@ -26,7 +26,7 @@ async def user_register(user_data: UserRegisterSchema, db: Session = Depends(get
 @auth_router.post("/login",  status_code=status.HTTP_200_OK)
 async def user_login(user_data: UserLoginSchema, db:Session = Depends(get_db)):
     user = check_user(user_data)
-    if not check_user(user_data) or not verify_password(user_data.password, user.heshed_password):
+    if not check_user(user_data) or not verify_password(user_data.password, user.hashed_password):
         return HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Invalid credentials")
     return generate_token(user.id)
     
