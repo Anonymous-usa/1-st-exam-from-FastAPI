@@ -3,6 +3,7 @@ from pydantic import BaseModel, field_validator, model_validator
 from sqlalchemy import DateTime
 from auth.schemas import UserSchema
 from .product import ProductSchema
+from typing import Optional
 
 class CartCreateSchema(BaseModel):
     user_id: int
@@ -16,17 +17,18 @@ class CartCreateSchema(BaseModel):
         return v
 
 
+
 class CartSchema(BaseModel):
     id: int
-    user: UserSchema
-    product: ProductSchema
+    user: Optional[UserSchema]
+    product: Optional[ProductSchema]
     quantity: int
     created_at: datetime 
 
-    
     @model_validator(mode='before')
     def check_consistency(cls, values):
-        quantity = values.get('quantity')
+        # Access 'quantity' directly from the model instance (values is the instance itself)
+        quantity = values.quantity  # 'values' refers to the model instance, not a dict
         if quantity is None or quantity <= 0:
             raise ValueError('Quantity must be greater than zero')
         return values

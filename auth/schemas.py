@@ -18,16 +18,25 @@ class UserRegisterSchema(BaseModel):
         if self["password"] != self["confirm_password"]:
             raise ValueError("Passwords don't match!")
         return self
-    
+
 
 class UserSchema(BaseModel):
     id: int
     fullname: str
     username: str
     email: EmailStr
-
+    class Config:
+        orm_mode = True
 class UserLoginSchema(BaseModel):
     username: str
     password: str
+
+    
+
+    @field_validator("*", mode="before")
+    def check_all(value):
+        if value is None:
+            raise ValueError("All fields  are required")
+        return value
     
     

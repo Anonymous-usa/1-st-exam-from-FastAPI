@@ -2,12 +2,12 @@ from pydantic import BaseModel, condecimal, Field, field_validator
 from fastapi import UploadFile
 from datetime import datetime
 
+
+
 class ProductCreateSchema(BaseModel):
     name: str = Field(..., max_length=100)
     description: str
     price: condecimal(max_digits=10, decimal_places=2) 
-    image: UploadFile
-    
 
     @field_validator('price')
     def check_price(cls, v):
@@ -20,7 +20,7 @@ class ProductSchema(BaseModel):
     name: str
     description: str
     price: condecimal(max_digits=10, decimal_places=2)
-    image: UploadFile
+    image: str
     created_at: datetime
 
     class Config:

@@ -17,7 +17,7 @@ class Cart(BaseModel):
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
 
     user_id: Mapped[int] = mapped_column(ForeignKey("users.id"), nullable=False)
-    user: Mapped["User"] = relationship("User", backref="carts")
+    user: Mapped["User"] = relationship("User", back_populates="carts")
 
     product_id: Mapped[int] = mapped_column(ForeignKey("products.id"), nullable=False)
     product: Mapped["Product"] = relationship("Product", back_populates="carts")  

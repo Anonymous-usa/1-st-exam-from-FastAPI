@@ -23,12 +23,16 @@ def generate_token(user_id:int):
 
     return token_response(token)
 
-def decode_jwt(token:str):
+def decode_jwt(token: str):
     try:
-        decode_token = jwt.decode(token, JWT_SECRET, algorithms = [JWT_ALGORITHM])
-        return decode_token if decode_token["expires"] >= time.time() else None 
-    except:
-        return {}
+        decoded_token = jwt.decode(token, JWT_SECRET, algorithms=[JWT_ALGORITHM])
+        return decoded_token
+    except jwt.ExpiredSignatureError:
+        return {"error": "Token has expired"}
+    except jwt.InvalidTokenError:
+        return {"error": "Invalid token"}
+    except Exception as e:
+        return {"error": f"An error occurred: {str(e)}"}
 
 
 class JWTBearer(HTTPBearer):
